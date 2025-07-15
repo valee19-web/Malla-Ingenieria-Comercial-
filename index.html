@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Interactiva</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
 
+    .semestre {
+      display: inline-block;
+      vertical-align: top;
+      background: #fff;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .semestre h3 {
+      text-align: center;
+    }
+
+    .ramo {
+      background-color: pink;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .aprobado {
+      background-color: purple !important;
+      color: white;
+      text-decoration: line-through;
+    }
+
+    .bloqueado {
+      background-color: lightgray !important;
+      color: #888;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Malla Curricular Interactiva</h1>
+
+  <div class="semestre">
+    <h3>1° Semestre</h3>
+    <div class="ramo" id="mat101">Matemática I</div>
+    <div class="ramo" id="eco101">Economía I</div>
+  </div>
+
+  <div class="semestre">
+    <h3>2° Semestre</h3>
+    <div class="ramo bloqueado" id="mat102" data-prerreq="mat101">Matemática II</div>
+    <div class="ramo bloqueado" id="eco102" data-prerreq="eco101">Economía II</div>
+  </div>
+
+  <script>
+    const ramos = document.querySelectorAll('.ramo');
+
+    ramos.forEach(ramo => {
+      ramo.addEventListener('click', () => {
+        if (ramo.classList.contains('bloqueado')) return;
+
+        ramo.classList.toggle('aprobado');
+
+        // Revisar si otros ramos pueden desbloquearse
+        desbloquearRamos();
+      });
+    });
+
+    function desbloquearRamos() {
+      document.querySelectorAll('.bloqueado').forEach(ramo => {
+        const prereqId = ramo.dataset.prerreq;
+        const prereq = document.getElementById(prereqId);
+        if (prereq && prereq.classList.contains('aprobado')) {
+          ramo.classList.remove('bloqueado');
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
